@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Punjab Agro Industries Pvt Ltd</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0 0 50px 0;
+            background-color: #e6f7ff;
+            min-height: 100vh;
+        }
+        header {
+            display: flex;
+            align-items: center;
+            background-color: #007acc;
+            color: white;
+            padding: 10px 20px;
+            justify-content: space-between;
+            position: relative;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+            text-align: center;
+            flex-grow: 1;
+        }
+        header img {
+            height: 50px;
+            width: auto;
+            margin-right: 15px;
+        }
+        table {
+            width: 95%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            table-layout: fixed;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+            word-wrap: break-word;
+        }
+        th {
+            background-color: #007acc;
+            color: white;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #007acc;
+            color: white;
+            margin-top: 50px;
+        }
+        #chart-container {
+            width: 80%;
+            margin: 20px auto;
+            background-color: white;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        canvas {
+            max-height: 200px;
+        }
+        #quarter-selector {
+            width: 95%;
+            margin: 20px auto;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        select, input {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 45%;
+        }
+        .select-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .header-links {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            display: flex;
+            gap: 15px;
+        }
+        .header-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <img src="file:///C:/New%20folder/Pun-Agro-logo-1.svg" alt="Punjab Agro Industries Logo">
+    <h1>Punjab Agro Industries Pvt Ltd</h1>
+    <div class="header-links">
+        <a href="file:///C:/New%20folder/HR_legal.html">HR</a>
+        <a href="file:///C:/New%20folder/PMFME/PMFME.HTML">PMFME</a>
+    </div>
+</header>
+
+<div id="quarter-selector">
+    <div class="select-wrapper">
+        <select id="quarterDropdown">
+            <option value="Q1">Quarter 1</option>
+            <option value="Q2">Quarter 2</option>
+        </select>
+    </div>
+    <div class="select-wrapper">
+        <input type="text" id="dateRange" placeholder="Select Date Range">
+    </div>
+</div>
+
+<div id="chart-container">
+    <canvas id="profitLossChart"></canvas>
+</div>
+
+<table id="divisionTable">
+    <thead>
+        <tr>
+            <th>Division</th>
+            <th>Revenue</th>
+            <th>Expenditure</th>
+            <th>Profit & Loss</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Data will be dynamically loaded -->
+    </tbody>
+</table>
+
+<footer>
+    &copy; 2024 Punjab Agro Industries Pvt Ltd
+</footer>
+
+<script>
+    const divisionData = {
+        Q1: [
+            { division: "H.O", revenue: 1000, expenditure: 800, link: "file:///C:/New%20folder/H_O.html" },
+            { division: "MFP", revenue: 1200, expenditure: 1000, link: "file:///C:/New%20folder/MFP/MFP.html" },
+            { division: "Petrol Pump", revenue: 500, expenditure: 700, link: "file:///C:/New%20folder/Petrol%20Pump/PP%20Location.html" },
+            { division: "Jantar & Gypsum", revenue: 1500, expenditure: 900 },
+            { division: "Wheat/Paddy Seed", revenue: 800, expenditure: 700 },
+            { division: "Fertilizer", revenue: 900, expenditure: 950, link: "file:///C:/New%20folder/Fertlizer/Fertilizer.html" },
+            { division: "Silage", revenue: 1100, expenditure: 1000 },
+        ],
+        Q2: [
+            { division: "H.O", revenue: 1100, expenditure: 850, link: "file:///C:/New%20folder/H_O.html" },
+            { division: "MFP", revenue: 1250, expenditure: 1050, link: "file:///C:/New%20folder/MFP/MFP.html" },
+            { division: "Petrol Pump", revenue: 550, expenditure: 750, link: "file:///C:/New%20folder/Petrol%20Pump/PP%20Location.html" },
+            { division: "Jantar & Gypsum", revenue: 1550, expenditure: 950 },
+            { division: "Wheat/Paddy Seed", revenue: 850, expenditure: 720 },
+            { division: "Fertilizer", revenue: 950, expenditure: 970, link: "file:///C:/New%20folder/Fertlizer/Fertilizer.html" },
+            { division: "Jantar & Gypsum", revenue: 1500, expenditure: 900 },
+            { division: "Silage", revenue: 1150, expenditure: 1050 },
+        ],
+    };
+
+    const tableBody = document.querySelector("#divisionTable tbody");
+    const dropdown = document.getElementById("quarterDropdown");
+    const ctx = document.getElementById("profitLossChart").getContext("2d");
+    let chart;
+
+    flatpickr("#dateRange", { mode: "range", dateFormat: "Y-m-d" });
+
+    function updateTableAndChart(quarter) {
+        const data = divisionData[quarter];
+        tableBody.innerHTML = data
+            .map(
+                (row) => `
+            <tr>
+                <td>${row.link ? `<a href="${row.link}">${row.division}</a>` : row.division}</td>
+                <td>₹${row.revenue}</td>
+                <td>₹${row.expenditure}</td>
+                <td>₹${row.revenue - row.expenditure}</td>
+            </tr>
+        `
+            )
+            .join("");
+
+        const labels = data.map((row) => row.division);
+        const profitLossData = data.map((row) => row.revenue - row.expenditure);
+
+        if (chart) chart.destroy();
+        chart = new Chart(ctx, {
+            type: "bar",
+            data: {
+                labels,
+                datasets: [
+                    {
+                        label: "Profit & Loss (₹)",
+                        data: profitLossData,
+                        backgroundColor: profitLossData.map((value) =>
+                            value > 0 ? "#4CAF50" : "#FF5733"
+                        ),
+                    },
+                ],
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { position: "top" } },
+            },
+        });
+    }
+
+    dropdown.addEventListener("change", (e) => updateTableAndChart(e.target.value));
+    updateTableAndChart("Q1");
+</script>
+</body>
+</html>
